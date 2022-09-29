@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\MateriaRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -51,6 +53,16 @@ class Materia
      * @ORM\Column(type="string", length=255)
      */
     private $estado;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Usuario::class, mappedBy="materia")
+     */
+    private $usuario;
+
+    public function __construct()
+    {
+        $this->usuario = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -137,6 +149,33 @@ class Materia
     public function setEstado(string $estado): self
     {
         $this->estado = $estado;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Usuario>
+     */
+    public function getUsuario(): Collection
+    {
+        return $this->usuario;
+    }
+
+    public function addUsuario(Usuario $usuario): self
+    {
+        if (!$this->usuario->contains($usuario)) {
+            $this->usuario[] = $usuario;
+            $usuario->addMaterium($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUsuario(Usuario $usuario): self
+    {
+        if ($this->usuario->removeElement($usuario)) {
+            $usuario->removeMaterium($this);
+        }
 
         return $this;
     }

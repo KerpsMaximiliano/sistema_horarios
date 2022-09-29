@@ -27,6 +27,12 @@ class Cuota
      */
     private $pago;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=usuario::class, inversedBy="cuotas")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $usuario;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -52,6 +58,18 @@ class Cuota
     public function setPago(bool $pago): self
     {
         $this->pago = $pago;
+
+        return $this;
+    }
+
+    public function getUsuario(): ?usuario
+    {
+        return $this->usuario;
+    }
+
+    public function setUsuario(?usuario $usuario): self
+    {
+        $this->usuario = $usuario;
 
         return $this;
     }

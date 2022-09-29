@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UsuarioRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -49,6 +51,27 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="string", length=255)
      */
     private $apellido;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Cuota::class, mappedBy="usuario")
+     */
+    private $cuotas;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=materia::class, inversedBy="usuario")
+     */
+    private $materia;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=notificacion::class, inversedBy="usuarios")
+     */
+    private $notificacion;
+
+    public function __construct()
+    {
+        $this->cuotas = new ArrayCollection();
+        $this->materia = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -171,6 +194,72 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     public function setApellido(string $apellido): self
     {
         $this->apellido = $apellido;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Cuota>
+     */
+    public function getCuotas(): Collection
+    {
+        return $this->cuotas;
+    }
+
+    public function addCuota(Cuota $cuota): self
+    {
+        if (!$this->cuotas->contains($cuota)) {
+            $this->cuotas[] = $cuota;
+            $cuota->setUsuario($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCuota(Cuota $cuota): self
+    {
+        if ($this->cuotas->removeElement($cuota)) {
+            // set the owning side to null (unless already changed)
+            if ($cuota->getUsuario() === $this) {
+                $cuota->setUsuario(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, materia>
+     */
+    public function getMateria(): Collection
+    {
+        return $this->materia;
+    }
+
+    public function addMaterium(materia $materium): self
+    {
+        if (!$this->materia->contains($materium)) {
+            $this->materia[] = $materium;
+        }
+
+        return $this;
+    }
+
+    public function removeMaterium(materia $materium): self
+    {
+        $this->materia->removeElement($materium);
+
+        return $this;
+    }
+
+    public function getNotificacion(): ?notificacion
+    {
+        return $this->notificacion;
+    }
+
+    public function setNotificacion(?notificacion $notificacion): self
+    {
+        $this->notificacion = $notificacion;
 
         return $this;
     }
