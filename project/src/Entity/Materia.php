@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\MateriaRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -28,19 +30,14 @@ class Materia
     private $descripcion;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer")
      */
-    private $dia;
+    private $horaInicio;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $hora_inicio;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $hora_fin;
+    private $horaFin;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -51,6 +48,21 @@ class Materia
      * @ORM\Column(type="string", length=255)
      */
     private $estado;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Usuario::class, mappedBy="materia")
+     */
+    private $usuarios;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $dia;
+
+    public function __construct()
+    {
+        $this->usuarios = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -81,38 +93,26 @@ class Materia
         return $this;
     }
 
-    public function getDia(): ?string
-    {
-        return $this->dia;
-    }
-
-    public function setDia(string $dia): self
-    {
-        $this->dia = $dia;
-
-        return $this;
-    }
-
     public function getHoraInicio(): ?int
     {
-        return $this->hora_inicio;
+        return $this->horaInicio;
     }
 
-    public function setHoraInicio(int $hora_inicio): self
+    public function setHoraInicio(int $horaInicio): self
     {
-        $this->hora_inicio = $hora_inicio;
+        $this->horaInicio = $horaInicio;
 
         return $this;
     }
 
     public function getHoraFin(): ?int
     {
-        return $this->hora_fin;
+        return $this->horaFin;
     }
 
-    public function setHoraFin(int $hora_fin): self
+    public function setHoraFin(int $horaFin): self
     {
-        $this->hora_fin = $hora_fin;
+        $this->horaFin = $horaFin;
 
         return $this;
     }
@@ -137,6 +137,45 @@ class Materia
     public function setEstado(string $estado): self
     {
         $this->estado = $estado;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Usuario>
+     */
+    public function getUsuarios(): Collection
+    {
+        return $this->usuarios;
+    }
+
+    public function addUsuario(Usuario $usuario): self
+    {
+        if (!$this->usuarios->contains($usuario)) {
+            $this->usuarios[] = $usuario;
+            $usuario->addMaterium($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUsuario(Usuario $usuario): self
+    {
+        if ($this->usuarios->removeElement($usuario)) {
+            $usuario->removeMaterium($this);
+        }
+
+        return $this;
+    }
+
+    public function getDia(): ?string
+    {
+        return $this->dia;
+    }
+
+    public function setDia(string $dia): self
+    {
+        $this->dia = $dia;
 
         return $this;
     }

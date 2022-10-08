@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UsuarioRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -22,7 +24,7 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
-    private $documento;
+    private $email;
 
     /**
      * @ORM\Column(type="json")
@@ -36,9 +38,9 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer")
      */
-    private $email;
+    private $documento;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -50,19 +52,41 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $apellido;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Materia::class, inversedBy="usuarios")
+     */
+    private $materia;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Cuota::class, mappedBy="usuario")
+     */
+    private $cuotas;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Notificacion::class, inversedBy="usuarios")
+     */
+    private $notificaciones;
+
+    public function __construct()
+    {
+        $this->materia = new ArrayCollection();
+        $this->cuotas = new ArrayCollection();
+        $this->notificaciones = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getDocumento(): ?string
+    public function getEmail(): ?string
     {
-        return $this->documento;
+        return $this->email;
     }
 
-    public function setDocumento(string $documento): self
+    public function setEmail(string $email): self
     {
-        $this->documento = $documento;
+        $this->email = $email;
 
         return $this;
     }
@@ -74,7 +98,7 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->documento;
+        return (string) $this->email;
     }
 
     /**
@@ -82,7 +106,7 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->documento;
+        return (string) $this->email;
     }
 
     /**
@@ -139,14 +163,14 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getEmail(): ?string
+    public function getDocumento(): ?int
     {
-        return $this->email;
+        return $this->documento;
     }
 
-    public function setEmail(string $email): self
+    public function setDocumento(int $documento): self
     {
-        $this->email = $email;
+        $this->documento = $documento;
 
         return $this;
     }
@@ -171,6 +195,84 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     public function setApellido(string $apellido): self
     {
         $this->apellido = $apellido;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Materia>
+     */
+    public function getMateria(): Collection
+    {
+        return $this->materia;
+    }
+
+    public function addMaterium(Materia $materium): self
+    {
+        if (!$this->materia->contains($materium)) {
+            $this->materia[] = $materium;
+        }
+
+        return $this;
+    }
+
+    public function removeMaterium(Materia $materium): self
+    {
+        $this->materia->removeElement($materium);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Cuota>
+     */
+    public function getCuotas(): Collection
+    {
+        return $this->cuotas;
+    }
+
+    public function addCuota(Cuota $cuota): self
+    {
+        if (!$this->cuotas->contains($cuota)) {
+            $this->cuotas[] = $cuota;
+            $cuota->setUsuario($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCuota(Cuota $cuota): self
+    {
+        if ($this->cuotas->removeElement($cuota)) {
+            // set the owning side to null (unless already changed)
+            if ($cuota->getUsuario() === $this) {
+                $cuota->setUsuario(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Notificacion>
+     */
+    public function getNotificaciones(): Collection
+    {
+        return $this->notificaciones;
+    }
+
+    public function addNotificacione(Notificacion $notificacione): self
+    {
+        if (!$this->notificaciones->contains($notificacione)) {
+            $this->notificaciones[] = $notificacione;
+        }
+
+        return $this;
+    }
+
+    public function removeNotificacione(Notificacion $notificacione): self
+    {
+        $this->notificaciones->removeElement($notificacione);
 
         return $this;
     }
