@@ -1,0 +1,12 @@
+{% extends "base.html.twig" %}
+{% block links %}
+    {{ parent() }}
+    <link href="{{ asset('css/?.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+{% use "header.html.twig" %}
+{% block main %}
+    {% for materia in materias %}
+        <span>{{ materia.getNombre }}</span>
+    {% endfor %}
+{% endblock %}
+{% use "footer.html.twig" %}
