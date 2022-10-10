@@ -1,97 +1,88 @@
 <?php
+    namespace App\Entity;
 
-namespace App\Entity;
+    use Doctrine\Common\Collections\ArrayCollection;
+    use Doctrine\Common\Collections\Collection;
+    use Doctrine\ORM\Mapping as ORM;
 
-use App\Repository\NotificacionRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
-
-/**
- * @ORM\Entity(repositoryClass=NotificacionRepository::class)
- */
-class Notificacion
-{
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    use App\Repository\NotificacionRepository;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $titulo;
+    * @ORM\Entity(repositoryClass=NotificacionRepository::class)
+    */
+    class Notificacion {
+        /**
+        * @ORM\Id
+        * @ORM\GeneratedValue
+        * @ORM\Column(type="integer")
+        */
+        private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $descripcion;
+        /**
+        * @ORM\Column(type="string", length=255)
+        */
+        private $titulo;
 
-    /**
-     * @ORM\ManyToMany(targetEntity=Usuario::class, mappedBy="notificaciones")
-     */
-    private $usuarios;
+        /**
+        * @ORM\Column(type="string", length=255)
+        */
+        private $descripcion;
 
-    public function __construct()
-    {
-        $this->usuarios = new ArrayCollection();
-    }
+        /**
+        * @ORM\ManyToMany(targetEntity=Usuario::class, mappedBy="notificaciones")
+        */
+        private $usuarios;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getTitulo(): ?string
-    {
-        return $this->titulo;
-    }
-
-    public function setTitulo(string $titulo): self
-    {
-        $this->titulo = $titulo;
-
-        return $this;
-    }
-
-    public function getDescripcion(): ?string
-    {
-        return $this->descripcion;
-    }
-
-    public function setDescripcion(string $descripcion): self
-    {
-        $this->descripcion = $descripcion;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Usuario>
-     */
-    public function getUsuarios(): Collection
-    {
-        return $this->usuarios;
-    }
-
-    public function addUsuario(Usuario $usuario): self
-    {
-        if (!$this->usuarios->contains($usuario)) {
-            $this->usuarios[] = $usuario;
-            $usuario->addNotificacione($this);
+        public function __construct() {
+            $this->usuarios = new ArrayCollection();
         }
 
-        return $this;
-    }
-
-    public function removeUsuario(Usuario $usuario): self
-    {
-        if ($this->usuarios->removeElement($usuario)) {
-            $usuario->removeNotificacione($this);
+        public function getId(): ?int {
+            return $this->id;
         }
 
-        return $this;
+        public function getTitulo(): ?string {
+            return $this->titulo;
+        }
+
+        public function setTitulo(string $titulo): self {
+            $this->titulo = $titulo;
+
+            return $this;
+        }
+
+        public function getDescripcion(): ?string {
+            return $this->descripcion;
+        }
+
+        public function setDescripcion(string $descripcion): self {
+            $this->descripcion = $descripcion;
+
+            return $this;
+        }
+
+        /**
+        * @return Collection<int, Usuario>
+        */
+        public function getUsuarios(): Collection {
+            return $this->usuarios;
+        }
+
+        public function addUsuario(Usuario $usuario): self {
+            if (!$this->usuarios->contains($usuario)) {
+                $this->usuarios[] = $usuario;
+                $usuario->addNotificacione($this);
+            }
+
+            return $this;
+        }
+
+        public function removeUsuario(Usuario $usuario): self {
+            if ($this->usuarios->removeElement($usuario)) {
+                $usuario->removeNotificacione($this);
+            }
+
+            return $this;
+        }
     }
-}
+?>
