@@ -13,38 +13,50 @@
         public function load(ObjectManager $manager): void {
             // Información del objeto Materia (Nombre).
             $materiaNombre = array(
-                0 => "Practica Profesionalisate 1",
-                1 => "UDI 2",
-                2 => "Estadistica",
-                3 => "Programacion 1",
-                4 => "Base de Datos 1"
+                0 => "Programación I",
+                1 => "Base de Datos I",
+                2 => "Práctica Profesionalizante I",
+                3 => "Estadística",
+                4 => "Innovación y Desarrollo emprendedor",
+                5 => "Unidad de Definición Institucional II",
+                6 => "Ingeniería del Software II",
+                7 => "Base de Datos I",
+                8 => "Programación I",
+                9 => "Inglés II"
             );
 
             // Información del objeto Materia (Descripción).
             $materiaDescripcion = array(
-                0 => "Usamos symfony",
-                1 => "Creamos proyecto de testing",
-                2 => "Usamos R",
-                3 => "Creamos app mobile con Andriud Studio",
-                4 => "Consultas sql en phpMyAdmin"
+                0 => "Unidad 10: Desarrollo de aplicaciones Android",
+                1 => "Unidad 3: Construcción de base de datos",
+                2 => "Unidad 11: Análisis y diseño orientado a objetos",
+                3 => "Unidad 4: Regresión lineal simple y correlación",
+                4 => "Unidad 11: Ecosistema emprendedor",
+                5 => "Unidad 5: Pruebas de Testing",
+                6 => "Unidad 5: Herramientas de desarrollo",
+                7 => "Unidad 3: Construcción de base de datos",
+                8 => "Unidad 10: Desarrollo de aplicaciones Android",
+                9 => "Unidad 6: Miscellanious"
             );
 
             // Información del objeto Materia (Aula).
             $materiaAula = array(
-                0 => "Sala de computos",
-                1 => "Virtual",
-                2 => "Aula 15",
-                3 => "Aula 17",
-                4 => "Aula 11"
+                0 => "2",
+                1 => "4",
+                2 => "15",
+                3 => "17",
+                4 => "Sala de Cómputos",
+                5 => "Virtual"
             );
 
             // Información del objeto Materia (Estado).
             $materiaEstado = array(
                 0 => "Teoria",
-                1 => "Parcial",
-                2 => "Trabajo Practico",
-                3 => "Clase consulta",
-                4 => "Practica"
+                1 => "Práctica",
+                2 => "Clase consulta",
+                3 => "Trabajo Práctico",
+                4 => "Exámen",
+                5 => "Sin clases"
             );
 
             // Información del objeto Materia (Dia).
